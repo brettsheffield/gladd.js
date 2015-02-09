@@ -20,7 +20,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-var g_gladd_version = '1.0.4'
+var g_gladd_version = '1.0.5'
 console.log('Loaded gladd.js version ' + g_gladd_version);
 var g_authurl = '/auth/';
 var g_url_form = '/html/forms/';
@@ -2963,6 +2963,9 @@ Form.prototype._populateHTMLPanes = function() {
                         markComboSelections($(this), combovals);
                         if ($(this).hasClass('chozify')) {
                             $(this).chosen();
+                            /* hack to fix hidden chosen combos. See: 
+                             * https://github.com/harvesthq/chosen/issues/92 */
+                            $('.chosen-container-multi').css('width', '100%');
                         }
                     });
                     form.finalize();
