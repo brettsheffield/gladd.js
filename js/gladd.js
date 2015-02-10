@@ -2541,6 +2541,7 @@ Form.prototype.activate = function() {
     if (this.tab == undefined) this.show();
     console.log('Form().activate()');
     this.tab.activate();
+    this.updateMap();
     return this;
 }
 
@@ -2670,7 +2671,6 @@ Form.prototype.finalize = function() {
     this.formatRadioButtons();  /* tune the radio */
     this.formatSelects();
     this.events();
-    this.updateMap();
     this.updateAllTotals();
     this.overrides();
 }
