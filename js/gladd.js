@@ -2541,7 +2541,6 @@ Form.prototype.activate = function() {
     if (this.tab == undefined) this.show();
     console.log('Form().activate()');
     this.tab.activate();
-    this.updateMap();
     return this;
 }
 
@@ -3199,6 +3198,7 @@ Form.prototype.show = function(tab) {
         this.populate();
         this.tab.setContent(this.workspace);
         this.finalize();
+        this.updateMap();
     }
     else {
         console.log('no tab content');
