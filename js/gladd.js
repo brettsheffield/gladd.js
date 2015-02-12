@@ -2833,13 +2833,16 @@ Form.prototype.prepareXML = function() {
 }
 
 /* Fill html form with data */
-Form.prototype.populate = function() {
+Form.prototype.populate = function(basehtml) {
     console.log('Form().populate()');
     var nodata = (this.data === {} || this.data === undefined);
     if (nodata) console.log('No data to populate form.');
     var id = undefined;
     var form = this;
-    this.workspace = $(this.html); /* start with base html */
+
+    /* start with base html */
+    this.workspace = (basehtml !== undefined) ? basehtml : $(this.html);
+
     /* set up Map */
     if (this.workspace.filter('div.map-canvas').length !== 0) {
         this.map = new Map();
@@ -2850,8 +2853,7 @@ Form.prototype.populate = function() {
         .attr('action');
     if (collection !== undefined) this.collection = collection;
 
-    var w = this.workspace.filter('div.' + this.object + '.' + this.action)
-        .first();
+    var w = this.workspace;
     /* populate combos */
     w.find('select.populate:not(.sub)').each(function() {
         var xml = form.data[$(this).attr('data-source')];
