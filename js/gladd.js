@@ -2678,6 +2678,7 @@ Form.prototype.finalize = function() {
     this.events();
     this.updateAllTotals();
     this.overrides();
+    this.tabToolBar();
 }
 
 Form.prototype.formatDatePickers = function() {
@@ -3329,6 +3330,15 @@ Form.prototype.submitSuccess = function(xml) {
     }
 }
 
+Form.prototype.tabToolBar = function() {
+    console.log('Form().tabToolBar()');
+    var form = this;
+    var t = this.tab.tablet;
+    t.find('div.tabtoolbar button.selected').each(function(event) {
+        /* initialize the form by clicking any selected toolbar buttons */
+        form.tabToolClick($(this));
+    });
+}
 
 /* to be overridden by application */
 Form.prototype.tabToolClick = function(btn) {
