@@ -2611,6 +2611,12 @@ Form.prototype.events = function() {
         form.reset();
         return false;
     });
+    t.find('div.tabtoolbar button').off().click(function(event) {
+        console.log('tabtool button clicked');
+        $(this).closest('div.tabtoolbar').find('button').removeClass('selected');
+        $(this).addClass('selected');
+        form.tabToolClick($(this));
+    });
     t.find('button.save').off().click(function() {
         if (form.validate()) form.submit();
         return false;
@@ -3321,6 +3327,11 @@ Form.prototype.submitSuccess = function(xml) {
             form.show();
         });
     }
+}
+
+
+/* to be overridden by application */
+Form.prototype.tabToolClick = function(btn) {
 }
 
 Form.prototype.updateDataSources = function(data) {
