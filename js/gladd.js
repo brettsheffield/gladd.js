@@ -289,6 +289,7 @@ function removeAllTabs() {
     $('div.tablet').fadeOut(300, function() { $(this).remove(); });
     delete TABS;
     TABS = new Tabs();
+    navitabSet(0);
 }
 
 /*****************************************************************************/
@@ -469,6 +470,10 @@ function navitabDecrement() {
 function navitabIncrement() {
     var c = parseInt($('div.navitab-box-front').text());
     $('div.navitab-box-front').text(++c);
+}
+
+function navitabSet(i) {
+    $('div.navitab-box-front').text(i);
 }
 
 /*****************************************************************************/
