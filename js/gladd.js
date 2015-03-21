@@ -2131,6 +2131,8 @@ function decimalAdd(x, y) {
 /*****************************************************************************/
 /* Return x-y */
 function decimalSubtract(x, y) {
+    if (!($.isNumeric(x))) x = '0.00';
+    if (!($.isNumeric(y))) y = '0.00';
     x = new Big(x);
     y = new Big(y);
     return x.minus(y);
