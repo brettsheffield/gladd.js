@@ -1672,6 +1672,10 @@ function customFormFieldHandler(input, o) {
     return false;
 }
 
+function isString(v) {
+    return ( Object.prototype.toString.call(v) == '[object String]' );
+}
+
 /*****************************************************************************/
 /* Replace HTML Special Characters */
 function escapeHTML(html) {
@@ -1682,6 +1686,10 @@ function escapeHTML(html) {
         '>': '&gt;',
         '"': '&quot;'
     };
+
+    if (!isString(html)) {
+        return html;
+    }
 
     for (x in hchars) {
         html = html.replace(new RegExp(x, 'g'), hchars[x]);
@@ -2476,6 +2484,9 @@ function formToXML(form, object, action) {
         if (name && !deleted) {
             if (!$(this).hasClass('nosubmit')) {
                 var myval = $(this).val();
+                if ($(this).is(':checkbox')) {
+                    myval = this.checked;
+                }
                 if (Array.isArray(myval) === false) {
                     myval = [myval];
                 }
@@ -2642,7 +2653,13 @@ Form.prototype.events = function() {
         return false;
     });
     t.find('input,select').filter(':not([readonly])').change(function() {
-        if ($(this).val() !== $(this).data('orig')) {
+        console.log('times a changin');
+        if ($(this).is(':checkbox')) {
+            if (this.checked !== $(this).data('orig')) {
+                $(this).addClass('dirty');
+            }
+        }
+        else if ($(this).val() !== $(this).data('orig')) {
             $(this).addClass('dirty');
         }
     }).blur(function() {
@@ -2889,6 +2906,10 @@ Form.prototype.populate = function(basehtml) {
                 var fld = w.find('form.' + form.object
                     + ' [name="' + tagName + '"]');
                 if (fld.length > 0) {
+                    if (fld.is(':checkbox')) {
+                        tagValue = (fld.val() === 't');
+                        $(this).prop('checked', tagValue);
+                    }
                     fld.val(tagValue);          /* set field value */
                     fld.data('orig', tagValue);  /* note the unmodified value */
                     if (form.hasMap() && MAPFIELDS[form.object]) {
