@@ -2907,10 +2907,12 @@ Form.prototype.populate = function(basehtml) {
                     + ' [name="' + tagName + '"]');
                 if (fld.length > 0) {
                     if (fld.is(':checkbox')) {
-                        tagValue = (fld.val() === 't');
-                        $(this).prop('checked', tagValue);
+                        tagValue = (tagValue === 't');
+                        fld.prop('checked', tagValue);
                     }
-                    fld.val(tagValue);          /* set field value */
+                    else {
+                        fld.val(tagValue);          /* set field value */
+                    }
                     fld.data('orig', tagValue);  /* note the unmodified value */
                     if (form.hasMap() && MAPFIELDS[form.object]) {
                         /* store map geo data */
