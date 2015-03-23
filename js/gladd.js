@@ -2653,7 +2653,6 @@ Form.prototype.events = function() {
         return false;
     });
     t.find('input,select').filter(':not([readonly])').change(function() {
-        console.log('times a changin');
         if ($(this).is(':checkbox')) {
             if (this.checked !== $(this).data('orig')) {
                 $(this).addClass('dirty');
@@ -2935,7 +2934,9 @@ Form.prototype.populate = function(basehtml) {
 
     /* note values for reset() */
     w.find('input,select').each(function() {
-        $(this).data('orig', $(this).val());
+        if ($(this).is(':not(:checkbox)')) {
+            $(this).data('orig', $(this).val());
+        }
     })
 
     /* where do we POST this form? */
@@ -3095,14 +3096,19 @@ Form.prototype.reset = function() {
     f.find('input,select').filter('.dirty,.zeroed').each(function() {
         var name = $(this).attr("name");
         console.log(name);
-        if ($(this).val() !== $(this).data('orig')) {
+        if ($(this).val() !== $(this).data('orig') || $(this).is(':checkbox')) {
             if ($(this).data('orig') === undefined) {
                 o = ($(this).find('option[value="-1"]').length > 0) ? -1 : 0;
                 old = ($(this).is('select')) ? o : '';
                 $(this).data('orig', old);
             }
             console.log('resetting value to ' + $(this).data('orig'));
-            $(this).val($(this).data('orig'));
+            if ($(this).is(':checkbox')) {
+                $(this).prop('checked', $(this).data('orig'));
+            }
+            else {
+                $(this).val($(this).data('orig'));
+            }
             $(this).trigger('change');
         }
         $(this).removeClass('dirty userdefined zeroed');
