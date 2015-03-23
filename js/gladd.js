@@ -2522,12 +2522,21 @@ function showForm(object, action, title, id) {
     return form.tab;
 }
 
+function objectCollection(object) {
+    return objectCollectionCustom(object);
+}
+
+/* to be overridden by application */
+function objectCollectionCustom(object) {
+    return object + 's';
+}
+
 /* Form() */
 function Form(object, action, title, id) {
     if (!(this instanceof Form))
         return new Form(object, action, title);
     console.log('Form() constructor');
-    this.collection = object + 's';
+    this.collection = objectCollection(object);
     this.object = object;
     this.action = action;
     this.id = id;
