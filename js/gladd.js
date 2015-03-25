@@ -2530,7 +2530,7 @@ function showForm(object, action, title, id) {
         .fail(function() {
             hideSpinner();
         });
-    return form.tab;
+    return form;
 }
 
 function objectCollection(object) {
@@ -2547,6 +2547,7 @@ function Form(object, action, title, id) {
     if (!(this instanceof Form))
         return new Form(object, action, title);
     console.log('Form() constructor');
+    this.classes = [];
     this.collection = objectCollection(object);
     this.object = object;
     this.action = action;
@@ -3256,6 +3257,9 @@ Form.prototype.show = function(tab) {
     }
     else {
         console.log('no tab content');
+    }
+    while (this.classes.length > 0) {
+        this.tab.tablet.addClass(this.classes.pop());
     }
     return this;
 }
