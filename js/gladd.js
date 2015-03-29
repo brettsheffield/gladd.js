@@ -3429,11 +3429,12 @@ Form.prototype.updateFormTotals = function(ctl) {
     t.find('.sum').each(function() {
         subtotal = decimalAdd(subtotal, $(this).val());
     });
-    var c = t.find('.subtotal');
-    if (c.hasClass('currency')) {
-        subtotal = String(subtotal).formatCurrency();
-    }
-    c.val(subtotal);
+    var c = t.find('.subtotal').each(function() {
+        if ($(this).hasClass('currency')) {
+            subtotal = String(subtotal).formatCurrency();
+        }
+        $(this).val(subtotal);
+    });
 }
 
 /* go through subform rows, filling in missing id data */
