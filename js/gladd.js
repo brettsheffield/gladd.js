@@ -20,7 +20,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-var g_gladd_version = '1.0.5'
+var g_gladd_version = '1.0.6'
 console.log('Loaded gladd.js version ' + g_gladd_version);
 var g_authurl = '/auth/';
 var g_url_form = '/html/forms/';
@@ -85,6 +85,36 @@ $(document).ready(function() {
 
     siteEvents();
 });
+
+/* return true if Gladd version >= version */
+function requireGladdJs(version) {
+    if (g_gladd_version === version) {
+        return true;
+    }
+    var a_parts = g_gladd_version.split('.');
+    var b_parts = version.split('.');
+    if (a_parts.length !== b_parts.length) {
+        return false;
+    }
+    for (var i = 0; i < a_parts.length; i++) {
+        if ($.isNumeric(a_parts[i]) && $.isNumeric(b_parts[i])) {
+            /* numeric parts, so version must be >= */
+            if (a_parts[i] > b_parts[i]) {
+                return true;
+            }
+            if (a_parts[i] < b_parts[i]) {
+                return false;
+            }
+        }
+        else {
+            /* not numeric, so must be an exact match */
+            if (a_parts[i] !== b_parts[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 /* attach delegated site-wide events */
 function siteEvents() {
