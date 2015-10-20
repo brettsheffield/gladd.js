@@ -2522,7 +2522,7 @@ function showForm(object, action, title, id) {
     console.log('showForm(' + object + '.' + action + ')');
     showSpinner();
     var form = new Form(object, action, title, id);
-    form.load()
+    form.d = form.load()
         .done(function() {
             form.activate();
             hideSpinner();
