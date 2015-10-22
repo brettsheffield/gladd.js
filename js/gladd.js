@@ -20,7 +20,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-var g_gladd_version = '1.0.6'
+var g_gladd_version = '1.0.7'
 console.log('Loaded gladd.js version ' + g_gladd_version);
 var g_authurl = '/auth/';
 var g_url_form = '/html/forms/';
@@ -156,6 +156,7 @@ function loginSetup() {
  *
  *****************************************************************************/
 function auth_check() {
+    console.log('auth_check()');
     $.ajax({
         url: g_authurl,
         timeout: g_timeout,
@@ -166,12 +167,45 @@ function auth_check() {
             loginok(data);
         },
         error: function(data, strError, e) {
-            if (strError === 'timeout') {
-                console.log('auth_check() timeout.  Retrying.');
-                auth_check();
+            status = data['status'];
+            if (e === 'timeout') {
+                console.log('auth_check() timeout');
+                /* if we're logged in already, retry.  Otherwise inform user */
+                if (g_loggedin) { 
+                    auth_check();
+                }
+                else {
+                    loginfailed("Timeout connecting to server");
+                }
+            }
+            else if (status === '0') {
+                /* Failed to connect to server - not a timeout - server down? */
+                console.log('Failed to connect to server - server down?');
+                /* if we're logged in already, retry.  Otherwise inform user */
+                if (g_loggedin) { 
+                    auth_check();
+                }
+                else {
+                    loginfailed("Unable to connect to server");
+                }
+            }
+            else if ((status === '401') || (status === '403')) {
+                /* Authentication failure */
+                if (g_loggedin && g_session) {
+                    console.log('retrying auth with username/password');
+                    g_session = false;
+                    auth_check();
+                }
+                else {
+                    loginfailed();
+                }
             }
             else {
-                loginfailed();
+                console.log('Unknown error');
+                console.log(data);
+                console.log(strError);
+                console.log(e);
+                loginfailed("Unknown error");
             }
         }
     });
@@ -368,10 +402,13 @@ function customLoginEvents(xml) {}
 
 /*****************************************************************************/
 /* Login failed - inform user */
-function loginfailed() {
+function loginfailed(msg) {
     g_password = '';
     g_loggedin = false;
-    alert("Login incorrect");
+    if (msg === undefined) {
+        msg = "Login incorrect";
+    }
+    alert(msg);
     setFocusLoginBox();
 }
 
